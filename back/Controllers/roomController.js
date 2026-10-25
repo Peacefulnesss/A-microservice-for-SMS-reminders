@@ -21,6 +21,7 @@ class RoomController{
 	}
 
 	async createRoom(req,res){
+		const { name, price, is_active, capacity, photo } = req.body;
 		try{
 			const room = await pool.query(`INSERT INTO rooms (name,price,is_active,capacity,photo) VALUES ($1,$2,$3,$4,$5) RETURNING *`, [name,price,is_active,capacity,photo])
 			res.json(room.rows)

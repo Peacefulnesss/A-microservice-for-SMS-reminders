@@ -24,7 +24,7 @@ async function createRoomsTable() {
             price DECIMAL(8,2) NOT NULL,
             is_active BOOLEAN DEFAULT TRUE,
             capacity INTEGER NOT NULL,
-            photo BYTEA NOT NULL
+            photo VARCHAR(50) NOT NULL
             );`) 
     } catch(error) {
         console.log("Error creating rooms table: ", error)

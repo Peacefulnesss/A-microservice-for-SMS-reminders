@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const dotenv = require("dotenv")
 const createTables = require('./db/setup')
 const pool = require("./db/index")
@@ -16,6 +17,7 @@ const applicationRouter = require("./Routes/applicationRouter")
 const reviewRouter = require("./Routes/reviewRouter")
 
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors({
   origin: 'http://localhost:5173' // адрес вашего фронтенда
 }));

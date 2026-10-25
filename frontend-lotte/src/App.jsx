@@ -8,6 +8,7 @@ import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Notifications from './pages/Notifications.jsx';
 import Register from './pages/Register.jsx';
+import Rooms from './pages/Rooms.jsx';
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="bookings" element={<Bookings />} />
           <Route path="extend" element={<Extend />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="rooms" element={<Rooms />}/>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Route>

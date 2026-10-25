@@ -15,6 +15,7 @@ import s from './Layout.module.css';
 const NAV = [
   { to: '/', label: 'Главная', icon: HomeIcon, end: true },
   { to: '/bookings', label: 'Мои бронирования', icon: CalendarIcon },
+  { to: '/rooms', label: 'Комнаты', icon: ChevronDown },
   { to: '/extend', label: 'Предложение проживание', icon: HistoryIcon },
   { to: '/notifications', label: 'Уведомления', icon: BellIcon },
 ];
