@@ -37,7 +37,7 @@ class AuthController {
         { expiresIn: '7d' }
       );
 
-      res.status(201).json({ user, token });
+      res.status(201).json({ user });
     } catch (error) {
       console.error('register error:', error);
       res.status(500).json({ message: 'Ошибка сервера' });

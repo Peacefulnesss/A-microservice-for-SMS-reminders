@@ -1,73 +1,68 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
-// ВРЕМЕННАЯ авторизация: пользователи и сессия хранятся в localStorage браузера.
-// Когда появится настоящий бэкенд, замените тела login / register / logout
-// запросами к API (и храните токен вместо пароля) — остальной код менять не придётся.
-
-const USERS_KEY = 'lotte_users';
-const SESSION_KEY = 'lotte_session';
-
-// Демо-пользователь, чтобы можно было сразу войти: demo@lotte.ru / 123456
-const SEED_USERS = [{ name: 'Иванов И. И.', email: 'demo@lotte.ru', password: '123456' }];
-
-function read(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function write(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* хранилище недоступно — работаем без сохранения */
-  }
-}
+const TOKEN_KEY = 'token';
+const USER_KEY = 'user';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => read(SESSION_KEY, null));
-
-  function startSession(found) {
-    const session = { name: found.name, email: found.email };
-    write(SESSION_KEY, session);
-    setUser(session);
-  }
-
-  function login(email, password) {
-    const users = read(USERS_KEY, SEED_USERS);
-    const found = users.find((u) => u.email === email.trim().toLowerCase() && u.password === password);
-    if (!found) return { ok: false, error: 'Неверный email или пароль' };
-    startSession(found);
-    return { ok: true };
-  }
-
-  function register({ name, email, password }) {
-    const users = read(USERS_KEY, SEED_USERS);
-    const normalized = email.trim().toLowerCase();
-    if (users.some((u) => u.email === normalized)) {
-      return { ok: false, error: 'Пользователь с таким email уже зарегистрирован' };
+  const [user, setUser] = useState(() => {
+    try {
+      const raw = localStorage.getItem(USER_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
     }
-    const created = { name: name.trim(), email: normalized, password };
-    write(USERS_KEY, [...users, created]);
-    startSession(created);
-    return { ok: true };
+  });
+
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
+
+  // Подставляем токен во все запросы axios автоматически
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common.Authorization;
+    }
+  }, [token]);
+
+  function startSession(newToken, newUser) {
+    localStorage.setItem(TOKEN_KEY, newToken);
+    localStorage.setItem(USER_KEY, JSON.stringify(newUser));
+    setToken(newToken);
+    setUser(newUser);
+  }
+
+  async function login(email, password) {
+    try {
+      const { data } = await axios.post('http://127.0.0.1:3000/api/auth/login', {
+        email,
+        password,
+      });
+      startSession(data.token, data.user ?? { email });
+      return { ok: true };
+    } catch (err) {
+      const error =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        'Ошибка входа. Попробуйте позже.';
+      return { ok: false, error };
+    }
   }
 
   function logout() {
-    try {
-      localStorage.removeItem(SESSION_KEY);
-    } catch {
-      /* ignore */
-    }
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    setToken(null);
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, token, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

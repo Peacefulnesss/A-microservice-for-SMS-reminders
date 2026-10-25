@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import TextField from '../components/TextField.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { validateLogin } from '../utils/validate.js';
 import s from './AuthForm.module.css';
+import axios from "axios"
 
 export default function Login() {
   const { user, login } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Уже вошли — на главную
   if (user) return <Navigate to="/" replace />;
@@ -20,16 +23,22 @@ export default function Login() {
     onChange: (e) => setForm((f) => ({ ...f, [field]: e.target.value })),
   });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const found = validateLogin(form);
     setErrors(found);
     setFormError('');
     if (Object.keys(found).length > 0) return;
 
-    const result = login(form.email, form.password);
-    if (!result.ok) setFormError(result.error);
-    // при успехе user изменится, и компонент сам перенаправит на главную
+    setLoading(true);
+    const result = await login(form.email, form.password);
+    setLoading(false);
+
+    if (!result.ok) {
+      setFormError(result.error);
+      return;
+    }
+    navigate('/');
   }
 
   return (
@@ -59,10 +68,11 @@ export default function Login() {
       <p className={s.switch}>
         Нет аккаунта?<Link to="/register">Зарегистрироваться</Link>
       </p>
-
-      <div className={s.hint}>
-        Демо-вход: <b>demo@lotte.ru</b> / <b>123456</b>
-      </div>
+      { 
+      // <div className={s.hint}>
+        //Демо-вход: <b>demo@lotte.ru</b> / <b>123456</b>
+      // </div>
+      }
     </section>
   );
 }
