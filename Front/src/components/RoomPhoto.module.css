@@ -1,0 +1,13 @@
+.photo {
+  position: relative;
+  flex: none;
+  overflow: hidden;
+  background-color: #6b7686;
+
+  background-image:
+    url('/public/hotel-room.png'),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 62%, rgba(40, 35, 30, 0.35) 100%),
+    linear-gradient(90deg, #8a8c97 0%, #a3a5af 38%, #e7edf3 38%, #bcd0e4 70%, #8fb0d3 100%);
+  background-size: cover;
+  background-position: center;
+}

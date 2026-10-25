@@ -1,0 +1,212 @@
+.content {
+  padding: 40px 48px 56px;
+}
+
+.h1 {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.subtitle {
+  margin-top: 14px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #8c8c8c;
+}
+
+/* ---------- Tabs ---------- */
+.tabs {
+  margin-top: 48px;
+  display: flex;
+  gap: 20px;
+}
+
+.tab {
+  height: 62px;
+  padding: 0 24px;
+  border-radius: 12px;
+  border: 1.5px solid var(--navy);
+  background: var(--white);
+  font: 600 22px 'Inter', sans-serif;
+  color: var(--navy);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.tab:hover {
+  background: #f4f4f4;
+}
+
+.tabActive,
+.tabActive:hover {
+  background: #d9d9d9;
+  border-color: #d9d9d9;
+}
+
+/* ---------- Shared ---------- */
+.info {
+  flex: 1;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.hotel {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.meta {
+  margin-top: 4px;
+  font-size: 20px;
+  color: #8c8c8c;
+  line-height: 1.3;
+}
+
+.metaLoose {
+  margin-top: 6px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 16px;
+  border-radius: 12px;
+  background: #bff0b4;
+  color: #2f7a2a;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ---------- Current booking ---------- */
+.current {
+  position: relative;
+  margin-top: 28px;
+  border: 1.5px solid var(--navy);
+  border-radius: 18px;
+  padding: 24px 32px;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.currentPhoto {
+  width: 200px;
+  height: 168px;
+  border-radius: 16px;
+}
+
+.current .badge {
+  margin-top: 10px;
+}
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 26px;
+}
+
+.btn {
+  height: 46px;
+  border-radius: 23px;
+  font: 500 17px 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btnPrimary {
+  width: 306px;
+  background: var(--navy);
+  color: var(--white);
+  border: 1.5px solid var(--navy);
+}
+
+.btnPrimary:hover {
+  background: #12306a;
+}
+
+.btnSecondary {
+  width: 252px;
+  background: var(--white);
+  color: var(--navy);
+  border: 1.5px solid var(--navy);
+}
+
+.btnSecondary:hover {
+  background: #f4f6fa;
+}
+
+/* Цена в правом верхнем углу карточки, кнопки идут под ней */
+.price {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  text-align: right;
+}
+
+.sum {
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.cap {
+  margin-top: 2px;
+  font-size: 15px;
+  color: #8c8c8c;
+}
+
+/* ---------- History ---------- */
+.historyTitle {
+  margin: 36px 0 16px 14px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  border: 1.5px solid var(--navy);
+  border-radius: 18px;
+  padding: 24px 32px 30px;
+  cursor: pointer;
+  background: var(--white);
+  transition: box-shadow 0.15s ease;
+}
+
+.item:hover {
+  box-shadow: 0 6px 22px rgba(10, 34, 72, 0.12);
+}
+
+.itemPhoto {
+  width: 200px;
+  height: 186px;
+  border-radius: 16px;
+}
+
+.itemBadge {
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  margin-left: 48px;
+}
+
+.arrow {
+  align-self: center;
+  margin-right: 24px;
+  width: 32px;
+  height: 32px;
+  color: var(--navy);
+}

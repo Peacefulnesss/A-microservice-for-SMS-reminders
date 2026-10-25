@@ -1,0 +1,74 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  border: 1.5px solid var(--grey-line);
+  border-radius: 14px;
+  background: var(--white);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.control:focus-within {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px var(--gold-soft);
+}
+
+.invalid,
+.invalid:focus-within {
+  border-color: #c0392b;
+  box-shadow: none;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 20px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 500 20px 'Inter', sans-serif;
+  color: var(--navy);
+}
+
+.input::placeholder {
+  color: #b4b4b4;
+}
+
+.eye {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 100%;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #8c8c8c;
+}
+
+.eye:hover {
+  color: var(--navy);
+}
+
+.eye svg {
+  width: 26px;
+  height: 26px;
+}
+
+.error {
+  font-size: 15px;
+  font-weight: 500;
+  color: #c0392b;
+}

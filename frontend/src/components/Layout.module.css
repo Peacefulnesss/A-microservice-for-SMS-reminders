@@ -1,0 +1,171 @@
+/* Макет 1440×1024: сайдбар 420px + контентная часть */
+.page {
+  width: 1440px;
+  height: 1024px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  background: var(--white);
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  background: var(--navy);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 32px 48px;
+}
+
+.brand {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.logo {
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: 40px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.company {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 58px;
+  padding: 0 20px;
+  border-radius: 10px;
+  color: var(--white);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.link svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+}
+
+.link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.active,
+.active:hover {
+  background: var(--gold);
+  color: var(--navy);
+}
+
+.logout {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 48px;
+  padding: 0 20px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.logout svg {
+  width: 26px;
+  height: 26px;
+}
+
+.logout:hover {
+  opacity: 0.8;
+}
+
+/* ---------- Main ---------- */
+.main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--white);
+}
+
+.topbar {
+  height: 80px;
+  flex: none;
+  background: var(--bg-top);
+  border-bottom: 1px solid var(--grey-line);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 36px;
+  padding: 0 48px;
+}
+
+.bellBtn {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--navy);
+  display: grid;
+  place-items: center;
+}
+
+.bellBtn svg {
+  width: 28px;
+  height: 28px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font: 600 20px 'Inter', sans-serif;
+  color: var(--navy);
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--white);
+  display: grid;
+  place-items: center;
+}
+
+.avatar svg {
+  width: 22px;
+  height: 22px;
+}
+
+.chev {
+  width: 22px;
+  height: 22px;
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+}
