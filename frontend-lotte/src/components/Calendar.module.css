@@ -1,0 +1,119 @@
+.calendar {
+  width: 100%;
+  max-width: 380px;
+  height: 300px;
+  user-select: none;
+  font-family: inherit;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.navBtn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.weekdays {
+  margin-bottom: 4px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  padding: 4px 0;
+}
+
+.weekend {
+  color: #c66;
+}
+
+.empty {
+  visibility: hidden;
+}
+
+.day {
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.day:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.day:disabled {
+  cursor: not-allowed;
+}
+
+/* Прошедшие дни */
+.dayPast {
+  color: #ccc;
+  text-decoration: line-through;
+}
+
+/* Занятые дни */
+.dayBooked {
+  background: #f5e5e5;
+  color: #b88;
+  text-decoration: line-through;
+}
+
+/* Дни внутри выбранного диапазона */
+.dayInRange {
+  background: #e8f0ff;
+  border-radius: 0;
+}
+
+/* Начало и конец брони */
+.dayStart,
+.dayEnd {
+  background: #4a7dff;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Сегодняшний день */
+.dayToday {
+  outline: 2px solid #4a7dff;
+  outline-offset: -2px;
+}

@@ -1,0 +1,44 @@
+.content {
+  padding: 40px 48px 56px;
+}
+
+.h1 {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.subtitle {
+  margin-top: 14px;
+  margin-bottom: 18px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #8c8c8c;
+}
+
+.calendar_div {
+    display: flex;
+    gap: 40px;
+}
+
+.img {
+    width: 50%;
+    height: 300px;
+    border-radius: 20px;
+}
+
+.button {
+    margin-top: 20px;
+    width: 306px;
+    background: var(--navy);
+    color: var(--white);
+    border: 1.5px solid var(--navy);
+    height: 46px;
+    border-radius: 23px;
+    font: 500 17px 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+.button:hover {
+    background: #12306a;
+}
