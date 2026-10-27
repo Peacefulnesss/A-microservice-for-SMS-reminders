@@ -20,6 +20,16 @@ class ApplicationController{
 		}
 	}
 
+	async getApplicationByUserId(req,res){
+		const id = parseInt(req.params.id)
+		try{
+			const application = await pool.query(`SELECT applications.id, name, photo, price, start_date, end_date, status FROM applications JOIN rooms ON applications.room_id = rooms.id WHERE user_id = $1`, [id])
+			res.json(application.rows)
+		}catch(error){
+			console.log(error)
+		}
+	}
+
 	async getBookedDates(req, res) {
 		try {
 			const { id } = req.params;
@@ -32,7 +42,6 @@ class ApplicationController{
 	}
 
 	async createApplication(req,res){
-		const client = await pool.connect();
 		const {user_id, room_id, start_date, end_date} = req.body
 			try{
 				if (!start_date || !end_date) {
@@ -45,23 +54,19 @@ class ApplicationController{
 				return res.status(400).json({ error: "Start date in the past" });
 			}
 
-			await client.query('BEGIN');
-
-			const conflict = await client.query(`SELECT id FROM applications WHERE room_id = $1 AND status IN ('Pending', 'Accept') AND start_date < $3 AND end_date > $2 FOR UPDATE`, [room_id, start_date, end_date]);
+			const conflict = await pool.query(`SELECT id FROM applications WHERE room_id = $1 AND status IN ('Активно', 'Завершено') AND start_date < $3 AND end_date > $2 FOR UPDATE`, [room_id, start_date, end_date]);
 
 			if (conflict.rows.length > 0) {
-				await client.query('ROLLBACK');
 				return res.status(409).json({ error: "Dates already booked" });
 			}
 
-			const result = await client.query(`INSERT INTO applications (user_id, room_id, status, start_date, end_date) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [user_id, room_id, 'Pending', start_date, end_date]);
+			const result = await pool.query(`INSERT INTO applications (user_id, room_id, status, start_date, end_date) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [user_id, room_id, 'Активно', start_date, end_date]);
 
-			await client.query('COMMIT');
 			res.status(201).json(result.rows[0]);
 		}catch(error){
 			console.error('error', error)
 		} finally {
-        	client.release();
+        	pool.release();
     	}
 	}
 	
@@ -70,6 +75,16 @@ class ApplicationController{
 		const {user_id,room_id,status,start_date,end_date} = req.body 
 		try{
 			const application = await pool.query(`UPDATE applications SET user_id = $1,room_id = $2,status = $3,start_date = $4,end_date = $5 WHERE id = $6 RETURNING *`, [user_id,room_id,status,start_date,end_date,id])
+			res.json(application.rows)
+		}catch(error){
+			console.error('error', error)
+		}
+	}
+
+	async changeApplicationStatus(req,res){
+		const id = parseInt(req.params.id, 10)
+		try{
+			const application = await pool.query(`UPDATE applications SET status = $1 WHERE id = $2 RETURNING *`, ["Завершено", id])
 			res.json(application.rows)
 		}catch(error){
 			console.error('error', error)

@@ -35,7 +35,7 @@ async function initializeApp(){
 	try{
 		const status = await pool.query("SELECT typname FROM pg_type WHERE typname = 'status'")
 		if(status.rows.length == 0) {
-			await pool.query("CREATE TYPE status AS ENUM('Accept','Reject','Pending')")
+			await pool.query("CREATE TYPE status AS ENUM('Завершено','Reject','Активно')")
 			console.log("Type status was created!")
 		}
 		createTables()
