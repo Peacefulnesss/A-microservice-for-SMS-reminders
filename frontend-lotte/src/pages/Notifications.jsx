@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { BellIcon, CheckBoxIcon, ChevronRight, PercentIcon, SendIcon } from '../components/Icons.jsx';
-import { notifications } from '../data/mock.js';
 import s from './Notifications.module.css';
 
 const FILTERS = [
@@ -18,11 +18,49 @@ const ICONS = {
   send: SendIcon,
 };
 
+function formatTime(iso) {
+  const d = new Date(iso);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export default function Notifications() {
   const [filter, setFilter] = useState('all');
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const visible = notifications.filter((n) => filter === 'all' || n.cat === filter);
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        let user = localStorage.getItem('user')
+        user = user.split(',')[0].split(':')[1]
+        const res = await axios.post(
+          `http://127.0.0.1:3000/api/notifications?category=${filter}`, {'user_id': user}
+        );
+        if (!cancelled) setItems(res.data);
+      } catch (e) {
+        if (!cancelled) setItems([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [filter]);
+
+  async function handleClick(n) {
+    if (!n.is_read) {
+      axios.post(
+        `http://127.0.0.1:3000/api/notifications/${n.id}/read`,
+        {},
+        { withCredentials: true },
+      ).catch(() => {});
+    }
+    if (n.to) navigate(n.to);
+  }
 
   return (
     <main className={s.content}>
@@ -45,14 +83,14 @@ export default function Notifications() {
       </div>
 
       <section className={s.list}>
-        {visible.map((n) => {
-          const Icon = ICONS[n.icon];
+        {items.map((n) => {
+          const Icon = ICONS[n.icon] ?? BellIcon;
           return (
             <button
               key={n.id}
               type="button"
               className={s.note}
-              onClick={() => n.to && navigate(n.to)}
+              onClick={() => handleClick(n)}
             >
               <span className={`${s.ico} ${s[n.tone]}`}>
                 <Icon />
@@ -62,7 +100,7 @@ export default function Notifications() {
                 <span className={s.text}>{n.text}</span>
               </span>
               <span className={s.side}>
-                <span className={s.time}>{n.time}</span>
+                <span className={s.time}>{formatTime(n.created_at)}</span>
                 <ChevronRight className={s.arrow} />
               </span>
             </button>
@@ -70,7 +108,9 @@ export default function Notifications() {
         })}
       </section>
 
-      {visible.length === 0 && <p className={s.empty}>В этой категории пока нет уведомлений</p>}
+      {!loading && items.length === 0 && (
+        <p className={s.empty}>В этой категории пока нет уведомлений</p>
+      )}
     </main>
   );
 }

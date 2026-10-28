@@ -47,15 +47,23 @@ async function createApplicationsTable() {
     }
 }
 
-async function createReviewsTable() {
+async function createNotificationsTable() {
     try {
         await pool.query(`
-        CREATE TABLE IF NOT EXISTS reviews(
+        CREATE TABLE IF NOT EXISTS notifications (
             id SERIAL PRIMARY KEY,
-            application_id INTEGER NOT NULL UNIQUE REFERENCES applications(id) ON DELETE CASCADE,
-            text TEXT NOT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT NOW()
-            );`) 
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            category VARCHAR(20) NOT NULL,       -- 'sms' | 'system' | 'booking'
+            icon VARCHAR(20) NOT NULL,       -- 'bell' | 'percent' | 'check' | 'send'
+            tone VARCHAR(10) NOT NULL,       -- 'gold' | 'green' | 'cyan'
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            link TEXT,                       -- куда вести при клике
+            is_read BOOLEAN NOT NULL DEFAULT FALSE,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications (user_id, created_at DESC);`) 
     } catch(error) {
         console.log("Error creating reviews table: ", error)
     }
@@ -65,7 +73,7 @@ async function createTables() {
     await createUsersTable()
     await createRoomsTable()
     await createApplicationsTable()
-    await createReviewsTable()
+    await createNotificationsTable()
 }
 
 module.exports = createTables

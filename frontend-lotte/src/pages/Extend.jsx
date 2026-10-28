@@ -5,7 +5,7 @@ import RoomPhoto from '../components/RoomPhoto.jsx';
 import { formatPrice, pluralNights } from '../utils/format.js';
 import s from './Extend.module.css';
 
-const HARD_MAX = 14; // общий лимит на всякий случай
+const HARD_MAX = 7;
 
 function toISO(date) {
   const y = date.getFullYear();
@@ -20,13 +20,12 @@ function formatDate(iso) {
 
 export default function Extend() {
   const [loading, setLoading] = useState(true);
-  const [booking, setBooking] = useState(null);       // текущая бронь
-  const [maxNights, setMaxNights] = useState(0);      // сколько можно продлить
+  const [booking, setBooking] = useState(null);
+  const [maxNights, setMaxNights] = useState(0);
   const [nights, setNights] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-  // Загружаем бронь и лимит
   useEffect(() => {
     async function load() {
       try {
@@ -38,7 +37,6 @@ export default function Extend() {
         if (res.data.booking) {
           setBooking(res.data.booking);
           setMaxNights(res.data.maxNights);
-          // если продлить нельзя — nights не важен
           setNights(res.data.maxNights >= 1 ? 1 : 0);
         }
       } catch (e) {
@@ -50,7 +48,6 @@ export default function Extend() {
     load();
   }, []);
 
-  // Что показываем, пока грузимся / нет брони / продлить нельзя
   if (loading) {
     return <main className={s.content}><p className={s.subtitle}>Загрузка…</p></main>;
   }
@@ -68,7 +65,6 @@ export default function Extend() {
 
   const canExtend = maxNights >= 1;
 
-  // Считаем новую дату выезда
   const newEndDate = (() => {
     const d = new Date(booking.end_date + 'T00:00:00');
     d.setDate(d.getDate() + nights);
@@ -83,13 +79,15 @@ export default function Extend() {
     try {
       let user = localStorage.getItem('user')
       user = user.split(',')[0].split(':')[1]
+
       await axios.post(
         `http://127.0.0.1:3000/api/application/bookings/${booking.id}/extend`, { nights, 'user_id':  user});
-      // Обновляем локально, чтобы UI сразу отразил новую дату
+
       setBooking((b) => ({
         ...b,
         end_date: toISO(newEndDate),
       }));
+
       setMaxNights((m) => Math.max(0, m - nights));
       setNights(1);
     } catch (e) {
@@ -104,7 +102,6 @@ export default function Extend() {
       <h1 className={s.h1}>Продление проживания</h1>
       <p className={s.subtitle}>Продлите ваше пребывание в комфортных условиях</p>
 
-      {/* Текущее проживание */}
       <section className={`${s.card} ${s.stay}`}>
         <img className={s.stayPhoto} src={`http://127.0.0.1:3000/uploads/${booking.photo}.jpg`}></img>
         <div>
@@ -119,7 +116,6 @@ export default function Extend() {
         </div>
       </section>
 
-      {/* Выбор ночей */}
       <section className={`${s.card} ${s.nights}`}>
         <h2 className={s.nightsTitle}>Выберите дополнительные ночи</h2>
 
@@ -159,7 +155,6 @@ export default function Extend() {
         )}
       </section>
 
-      {/* Подтверждение */}
       {canExtend && (
         <div className={s.confirm}>
           <div className={s.confirmText}>

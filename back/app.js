@@ -4,6 +4,7 @@ const dotenv = require("dotenv")
 const createTables = require('./db/setup')
 const pool = require("./db/index")
 const cors = require("cors")
+require("./reminder")
 
 dotenv.config()
 
@@ -15,6 +16,7 @@ const authRouter = require("./Routes/authRouter")
 const roomRouter = require("./Routes/roomRouter")
 const applicationRouter = require("./Routes/applicationRouter")
 const reviewRouter = require("./Routes/reviewRouter")
+const notificationRouter = require("./Routes/notificationsRouter")
 
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -30,6 +32,7 @@ app.use("/api/user", userRouter)
 app.use('/api/room', roomRouter)
 app.use("/api/application", applicationRouter)
 app.use('/api/review', reviewRouter)
+app.use("/api/notifications", notificationRouter)
 
 async function initializeApp(){
 	try{

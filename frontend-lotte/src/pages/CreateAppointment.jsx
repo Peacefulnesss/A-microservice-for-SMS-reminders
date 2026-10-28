@@ -38,7 +38,6 @@ export default function CreateAppointment() {
                 start_date: toISO(startDate),
                 end_date: toISO(endDate),
             });
-        // обновляем занятые даты
             const bookedRes = await axios.get(`http://127.0.0.1:3000/api/application/dates/${room.id}`);
             setBookedRanges(bookedRes.data);
             setStartDate(null);
@@ -61,19 +60,16 @@ export default function CreateAppointment() {
     function buildBookedSet(ranges) {
         const set = new Set();
         for (const { start_date, end_date } of ranges) {
-            // Приводим к дате без времени
             let cur = new Date(start_date);
             const end = new Date(end_date);
             while (cur < end) {
                 set.add(toISO(cur));
                 cur.setDate(cur.getDate() + 1);
             }
-        // если хочешь блокировать и день выезда — добавь ещё end
     }
         return set;
     }
 
-        // Проверка: можно ли выбрать диапазон (нет ни одной занятой даты внутри)
     function isRangeFree(start, end, bookedSet) {
         let cur = new Date(start);
         while (cur < end) {
@@ -86,26 +82,20 @@ export default function CreateAppointment() {
     function handleDayClick(dayDate) {
         const iso = toISO(dayDate);
         
-        // Нельзя выбрать занятый день
         if (bookedDates.has(iso)) return;
-        // Нельзя выбрать прошедший день
         if (dayDate < new Date(new Date().toDateString())) return;
 
-        // Первый клик — выбираем начало
         if (!startDate || (startDate && endDate)) {
             setStartDate(dayDate);
             setEndDate(null);
             return;
         }
 
-        // Второй клик — выбираем конец
         if (dayDate <= startDate) {
-            // Кликнули раньше начала — просто переносим начало
             setStartDate(dayDate);
             return;
         }
 
-        // Проверяем, что в диапазоне нет занятых дат
         if (!isRangeFree(startDate, dayDate, bookedDates)) {
             alert('В выбранном диапазоне есть занятые даты');
             return;

@@ -1,4 +1,5 @@
 const pool = require ("../db/index")
+const createNotification = require("../db/notifications")
 
 class ApplicationController{
 	async getAllApplications(req,res){
@@ -105,13 +106,16 @@ class ApplicationController{
 			}
 
 			const result = await pool.query(`INSERT INTO applications (user_id, room_id, status, start_date, end_date) VALUES ($1, $2, $3, $4, $5) RETURNING *`, [user_id, room_id, 'Активно', start_date, end_date]);
+			console.log(user_id)
+
+			await createNotification(user_id, 'booking', 'check', 'green', 'Подтверждение бронирования', `Ваше бронирование № ${result.rows[0].id} успешно подтверждено.`, '/bookings',);
+			//const notif = await pool.query(`INSERT INTO notifications (user_id, category, icon, tone, title, body, link) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`), 
+			//[user_id, 'booking', 'check', 'green', 'Подтверждение бронирования', `Ваше бронирование № ${result.rows[0].id} успешно подтверждено.`, '/bookings']
 
 			res.status(201).json(result.rows[0]);
 		}catch(error){
 			console.error('error', error)
-		} finally {
-        	pool.release();
-    	}
+		}
 	}
 
 	// POST /api/bookings/:id/extend
